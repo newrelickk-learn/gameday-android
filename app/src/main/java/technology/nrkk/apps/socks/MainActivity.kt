@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.listviewsample.ProductListAdapter
+import com.newrelic.agent.android.NewRelic
 import technology.nrkk.apps.socks.models.Product
 import technology.nrkk.apps.socks.models.User
 import technology.nrkk.apps.socks.utils.APIUtils
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NewRelic.recordBreadcrumb("OpenMain")
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -34,27 +36,21 @@ class MainActivity : AppCompatActivity() {
         }
         goToCartButton = findViewById(R.id.btn_gotocart)
         goToCartButton.setOnClickListener {
-            goToCart()
+            runOnUiThread {
+                NewRelic.recordBreadcrumb("ClickGoToCart")
+                val intent = Intent(this, CartActivity::class.java)
+                getContent.launch(intent)
+            }
         }
 
-        APIUtils.getItems(applicationContext, "", this::succeeded, this::failed)
-    }
-    private fun goToCart () {
-        runOnUiThread {
-            val intent = Intent(this, CartActivity::class.java)
-            getContent.launch(intent)
-        }
-    }
-    private fun succeeded (items: List<Product>) {
-        runOnUiThread {
-            val productListAdapter = ProductListAdapter(applicationContext, items)
-            val listView = findViewById<ListView>(R.id.product_list)
-            listView.adapter = productListAdapter
-            listView.onItemClickListener =  ListItemClick()
-        }
-    }
-    private fun failed () {
-
+        APIUtils.getItems(applicationContext, "", fun (items: List<Product>) {
+            runOnUiThread {
+                val productListAdapter = ProductListAdapter(applicationContext, items)
+                val listView = findViewById<ListView>(R.id.product_list)
+                listView.adapter = productListAdapter
+                listView.onItemClickListener =  ListItemClick()
+            }
+        }) {}
     }
 
     private inner class ListItemClick : AdapterView.OnItemClickListener {

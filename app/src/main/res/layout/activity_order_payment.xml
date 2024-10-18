@@ -80,7 +80,7 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="36dp">
 
                     <TextView
                         android:id="@+id/textView11"
@@ -91,7 +91,7 @@
                     <Spinner
                         android:id="@+id/spinner_payment_type"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="48dp" />
 
                 </TableRow>
 
@@ -107,7 +107,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="確認"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,12 +120,15 @@
 
             <Button
                 android:id="@+id/btn_back"
-                style="@android:style/Widget.DeviceDefault.Button.Colored"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="50dp"
                 android:text="戻る"
                 android:textColorLink="#929292"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

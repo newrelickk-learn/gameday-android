@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: appium
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: genymotion-pem
+  namespace: appium
+type: Opaque
+data:
+  android.pem: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBblVkd1AxU1huM0x4WUxxS3l6S0NmaklBUURtN2ZqaWRENzYwTHRZenRtMDJXZXpECjlKSS94Q0NZMHFybzU0TUQ0dWd4UkJ3YVBqTWxheThIM3F0WXVlMG10SjMvekRTSUhsNTIwck9Uamt6NllXOUYKczRLclpZQU1oUEs5UkJlMjJEUWw2WmVGU3g3SlZYRVprMXdIK0ZpS2RIVlRQV0g1dWkzZGNHNXEzWmNEd3QvcQpUUzY0eDdpYTBTUlJzWHk0clJvNXVzbTNZL0s1bDlPNzZGck5VK2ZWNzNGVnpVQWFNQlpWWDIrSDVuQXZVWkVWCitVb0FFTE9vTGxBaDlkOTNWTHpjN2RGSWgyNzBkUFBSbjlQamFPMmtHaGdrZ2N0NWdSMkFOTlppR3YybGI1eVgKMGJCMVlBajhVMGhOSUd2dnJNd29JalY1MUpTNDNhMlpvZ0h1T3dJREFRQUJBb0lCQUIweVU4NE40QS9EZ0xlYQpLWVhMSEpwY29kdEtYRm4wSElQOXZPa3M3bkNoR1lQY0JneHkwYytRMVkzV0dHSlIyZmpYYmIzZEVhb1dTSTM3Ckx4VFE3aW1sc3BlNDlQRnRsdzg4TGdhek8yTWhPeUczVEZNa29MaTQ2cG9MamNNRU8vY3F4eGJ6LzlTUUpJUHQKK1BkNEVDcTBGUS9GYit4bk1icTBKUFZvS2dKMGFNMWlUajNYZUM0NmFKRDNQNjI4V3VzYzNKZkdETS9MSVJlaQpSeFdRRXVmcER6ZkFRWGZEb0E5Ykl4UGZJYkdsemhOSEkySE14UkFLM3RpTkp0UFZDcFcrK2xvZXRPQXlIM3JaCmMvbEhsaVY2a3F4eWdKak1PV09GUlp6dG1xVjUxZDNiOE1JaTV5aERrT2dCcVh1RktMc0FNanFaWDBQQ0FiMlEKY09lSnYyRUNnWUVBNi9kUHZBV3ExY1pCS3QzV1JVempZUjBZRnh3bTR3R1hDVGsya2tyYStGMzZWRm1EYUV1bgpFN0hFUzdES3lxMmZKTVZvbEF5K1VGWU1ZUkNVVHFVaGUzWWYwZ3RZSm9yTHhSQldQVGw2QnEzVUJkOG1ROVVWCmNXZ0pvekd6aEtEK05xeWkyaGpjUXJ4b29seGZsbiszMUR6SWVKbXVRb2xucXB2WXhSL0RwOGtDZ1lFQXFxSGcKVVVwaURPTGIxWTQ0eUR6SlRmcDhtM2tWU1lJM3BWNlZ5RngvRzBqQU14Uzl0eUgxY2xYYUlVVTNxazlDRmdPRwp3MDIzTHdTRFhHeE9OVm9BNDdKT3cyYnUwbmhqRGlBMVp6cE1QU3FHVWJMOHRxV2ZvNFY1TGM5dVNoMnlRM2FOCjNaUU4zbEhCdmV5V0hMM3dVeWR3OUFlM1I0TzE5NVVucEgya2IrTUNnWUJFKzJURTY4YzRmWi9aZjBhL3RhMlgKVzJFS2lJRlp4Y0k0d1JBU0RtNGJRNllGK0xFdzBVVUR2ZWxMMDJCRmhpSkxKcWJlK1NhOTU1bncybDd3NnRkeAo5Mk53RFQ3MDdZaUtrSzhWY1BNYWRzRFFBcDkySHhvSXNFaDQrL09tSjBhS0IwZ0lpRklEOUg2R1VJamxQMnNuClVhbXRrQWZnamJqUHFJWGpndGk0K1FLQmdBelhTYzVVVHJTeGplR3daazJMWllyY3d1dmdYTjIvVXZpNitZS3UKazFJMlUyQ0V1eEpCRi91V3dtZW1rZDNiUVJudkFnRklvL1NCM25EaUpiQ1dLV0w1VkR3WVR2aS8zcFI5a0FkSQp0OXdTaXpFeXl4bmp0UFBWWTUweTh4WFl6a1dOY25ldVlLek9ja29jdDk5SjNBQW1BN1lacm8xUE9DNTlweElWCjhuNEpBb0dCQU45cHd5bWxHQ05sdCtMTWRLVTJ3a1pURkl3RkVwNkNxbWRMblRQLzlHRlljL2ZGSU5lM2NDeEUKc1lXSDNjU3EzWlhmTk5yZlZuSkZ2MEtsVFdtYU1Wd2E0dWRJb0ZMZmxqdzgzNDhGNUNKVVdhc2ZSZG1WbTJDKwpwY0lZMzZHWDRyY1JlRG5EOWZBMmV1OWcvV2wydnVuKzdqTTljcGdjc3BQbFBicWVEbHlGCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
+  config: SG9zdCAxMC4xMDAuMjAwLjEwMCAjIFlvdSBjYW4gdXNlIGFueSBuYW1lCiAgICAgICAgICAgIEhvc3ROYW1lIDEwLjEwMC4yMDAuMTAwCiAgICAgICAgICAgIElkZW50aXR5RmlsZSAvcm9vdC8uc3NoL2FuZHJvaWQucGVtCiAgICAgICAgICAgIFVzZXIgc2hlbGwKICAgICAgICAgICAgRm9yd2FyZEFnZW50IHllcwogICAgICAgICAgICBUQ1BLZWVwQWxpdmUgeWVzCiAgICAgICAgICAgIENvbm5lY3RUaW1lb3V0IDUKICAgICAgICAgICAgU2VydmVyQWxpdmVDb3VudE1heCAxMAogICAgICAgICAgICBTZXJ2ZXJBbGl2ZUludGVydmFsIDE1Cg==
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssh
+  namespace: appium
+  labels:
+    app: ssh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ssh
+  template:
+    metadata:
+      labels:
+        app: ssh
+    spec:
+      containers:
+        - name: ssh
+          image: cagataygurturk/docker-ssh-tunnel:0.0.3
+          command: ["/bin/sh"]
+          args: ["-c", "rm -rf /root/.ssh && mkdir /root/.ssh && cp -L /root/ssh/* /root/.ssh/ && ls -la /root/.ssh && chmod -R 600 /root/.ssh/* && ssh $SSH_DEBUG -o StrictHostKeyChecking=no -N $TUNNEL_HOST -L *:$LOCAL_PORT:$REMOTE_HOST:$REMOTE_PORT && while true; do sleep 30; done;"]
+          env:
+            - name: TUNNEL_HOST
+              value: "10.100.200.100"
+            - name: REMOTE_HOST
+              value: "localhost"
+            - name: LOCAL_PORT
+              value: "5555"
+            - name: REMOTE_PORT
+              value: "5555"
+          volumeMounts:
+            - name: genymotion-pem
+              mountPath: /root/ssh
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: 5555
+          resources:
+            limits:
+              memory: 2Gi
+              cpu: "1"
+            requests:
+              memory: 512Mi
+              cpu: "0.2"
+      volumes:
+        - name: genymotion-pem
+          secret:
+            secretName: genymotion-pem
+            items:
+            - key: android.pem
+              path: android.pem
+            - key: config
+              path: config
+---
+
+

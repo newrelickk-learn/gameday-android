@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.newrelic.agent.android.NewRelic
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.FormBody
@@ -17,20 +18,19 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import technology.nrkk.apps.socks.models.Cart
-import technology.nrkk.apps.socks.models.CartItem
 import technology.nrkk.apps.socks.models.Order
 import technology.nrkk.apps.socks.models.Product
 import technology.nrkk.apps.socks.models.User
 import java.io.IOException
 import java.io.InputStream
-import java.net.URL
 import java.util.Base64
 
 
 object APIUtils {
 
     private val client = OkHttpClient()
-    val URL_BASE = "http://10.0.2.2:8080"//"https://front.demo.learn.nrkk.technology"
+    //val URL_BASE = "http://10.0.2.2:8080"
+    val URL_BASE = "https://front.demo.learn.nrkk.technology"
     fun getRequest(context: Context, path: String): Request {
         val token = context.getSharedPreferences("technology.nrkk.demo.front", MODE_PRIVATE).getString("token", "")
         return Request.Builder()
@@ -57,18 +57,18 @@ object APIUtils {
         val token = Base64.getEncoder().encodeToString("%s:%s".format(email, password).toByteArray())
         val loginPreference = context.getSharedPreferences("technology.nrkk.demo.front", MODE_PRIVATE)
         loginPreference.edit().putString("token", token).apply();
-        /*
         val request = Request.Builder()
             .header("Content-type", "application/json")
             .header("Authorization", "Basic %s".format(token))
-            .url("%s%s".format(URL_BASE, "/cart"))
+            .url("%s%s".format(URL_BASE, "/api/user"))
             .post("".toRequestBody()).build()
-         */
+         /*
         val request = Request.Builder()
             .header("Content-type", "application/json")
             .header("Authorization", "Basic %s".format(token))
             .url("%s%s".format(URL_BASE, "/cart"))
             .get().build()
+          */
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 failed()
@@ -78,7 +78,8 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val user = User(0,"a","a","a","a") //mapper.readValue<User>(responseData)
+                    val user = mapper.readValue<User>(responseData)
+                    NewRelic.setAttribute("user", user.id.toString())
                     succeeded(user)
                 } else {
                     failed()

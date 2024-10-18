@@ -30,6 +30,7 @@ class ProductListAdapter(context: Context, var products: List<Product>): ArrayAd
         if (convertView == null) {
             view = layoutInflater.inflate(R.layout.product_list, parent, false)
         }
+        view?.tag = product.id
         val imageView = view?.findViewById<ImageView>(R.id.image)
         APIUtils.getImageStream(context, product.imageUrl0, fun(inputStream: InputStream?) {
             Handler(Looper.getMainLooper()).post(Runnable {

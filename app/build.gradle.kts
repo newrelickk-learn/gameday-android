@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("newrelic")
 }
 
 android {
@@ -17,6 +18,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "key0"
+            keyPassword = "testtest"
+            storeFile = file("../deployment/keystore/release.keystore")
+            storePassword = "testtest"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -24,6 +33,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -58,5 +68,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
+
+    implementation("com.newrelic.agent.android:android-agent:7.6.0")
 
 }

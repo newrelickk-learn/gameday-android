@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appium
+  namespace: appium
+spec:
+  selector:
+    matchLabels:
+      app: appium
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: appium
+    spec:
+      containers:
+        - image: public.ecr.aws/g7c8o4c7/appium:latest
+          name: appium
+          ports:
+            - name: appium
+              containerPort: 4723
+          env:
+            - name: REMOTE_ADB
+              value: true

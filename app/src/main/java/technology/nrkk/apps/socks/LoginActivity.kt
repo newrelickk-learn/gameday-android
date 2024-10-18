@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import technology.nrkk.apps.socks.models.User
 import technology.nrkk.apps.socks.utils.APIUtils
+import com.newrelic.agent.android.NewRelic
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var usernameEditText: EditText
@@ -18,6 +19,10 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NewRelic.withApplicationToken(
+            "NEW_RELIC_MOBILE_KEY"
+        ).start(this.applicationContext)
+
         setContentView(R.layout.activity_login)
         usernameEditText = findViewById(R.id.email)
         passwordEditText = findViewById(R.id.password)

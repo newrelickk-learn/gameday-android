@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.newrelic.agent.android.NewRelic
 import technology.nrkk.apps.socks.databinding.ActivityProductDetailBinding
 import technology.nrkk.apps.socks.models.Product
 import technology.nrkk.apps.socks.utils.APIUtils
@@ -41,8 +42,10 @@ class ProductDetailActivity : AppCompatActivity() {
             })
         }, fun (){})
         binding.btnAddToCart.setOnClickListener {
+            NewRelic.recordBreadcrumb("ClickItemAdd")
             APIUtils.addToCart(this, productId, 1, {
                 runOnUiThread {
+                    NewRelic.recordBreadcrumb("ItemAdded")
                     Toast.makeText(this@ProductDetailActivity, "追加しました", Toast.LENGTH_SHORT).show()
                     finish()
                 }

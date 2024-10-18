@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.listviewsample.ProductListAdapter
+import com.newrelic.agent.android.NewRelic
 import technology.nrkk.apps.socks.databinding.ActivityCartBinding
 import technology.nrkk.apps.socks.databinding.ActivityProductDetailBinding
 import technology.nrkk.apps.socks.models.Cart
@@ -38,6 +39,7 @@ class CartActivity : AppCompatActivity() {
             insets
         }
         binding.btnPurchace.setOnClickListener {
+            NewRelic.recordBreadcrumb("ClickGoToPurchace")
             APIUtils.startOrder(applicationContext, fun (order: Order) {
                 runOnUiThread {
                     val intent = if (order.orderStage == "CONFIRM")

@@ -39,30 +39,38 @@ class OrderPaymentActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val order = intent.extras?.getSerializable<Order>("Order", Order::class.java)
-        binding.btnConfirm.setOnClickListener {
-            if (order == null) {
-                return@setOnClickListener
-            }
-            order.paymentType = binding.spinnerPaymentType.selectedItem.toString()
-            order.couponCode = binding.editTextCoupon.text.toString()
-            APIUtils.confirmOrder(applicationContext, order, fun (newOrder: Order) {
-                runOnUiThread {
-                    val intent = Intent(this, OrderConfirmActivity::class.java)
-                    intent.putExtra("Order", newOrder)
-                    getContent.launch(intent)
-                    Toast.makeText(this@OrderPaymentActivity, newOrder.orderStage, Toast.LENGTH_SHORT).show()
+        try {
+            val order = intent.extras?.getSerializable<Order>("Order", Order::class.java)
+            binding.btnConfirm.setOnClickListener {
+                if (order == null) {
+                    return@setOnClickListener
                 }
-            }) {}
+                order.paymentType = binding.spinnerPaymentType.selectedItem.toString()
+                order.couponCode = binding.editTextCoupon.text.toString()
+                APIUtils.confirmOrder(applicationContext, order, fun(newOrder: Order) {
+                    runOnUiThread {
+                        val intent = Intent(this, OrderConfirmActivity::class.java)
+                        intent.putExtra("Order", newOrder)
+                        getContent.launch(intent)
+                        Toast.makeText(
+                            this@OrderPaymentActivity,
+                            newOrder.orderStage,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }) {}
+            }
+            binding.btnBack.setOnClickListener {
+                finish()
+            }
+            binding.textTotal.text = order?.cart?.totalPrice.toString()
+            binding.textAmount.text = order?.cart?.amount.toString()
+            val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
+            adapter.add("現金")
+            adapter.add("クレジットカード")
+            binding.spinnerPaymentType.adapter = adapter
+        } catch (e: Exception) {
+            Toast.makeText(this@OrderPaymentActivity, e.toString(), Toast.LENGTH_SHORT)
         }
-        binding.btnBack.setOnClickListener {
-            finish()
-        }
-        binding.textTotal.text = order?.cart?.totalPrice.toString()
-        binding.textAmount.text = order?.cart?.amount.toString()
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        adapter.add("現金")
-        adapter.add("クレジットカード")
-        binding.spinnerPaymentType.adapter = adapter
     }
 }
