@@ -22,4 +22,4 @@ spec:
               containerPort: 4723
           env:
             - name: REMOTE_ADB
-              value: true
+              value: "true"
