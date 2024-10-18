@@ -14,6 +14,7 @@ COPY ./gradle.properties /build/gradle.properties
 RUN  cd /build/ && \
      sed -i 's|NEW_RELIC_MOBILE_KEY|'${NEW_RELIC_MOBILE_KEY}'|' app/newrelic.properties && \
      sed -i 's|NEW_RELIC_MOBILE_KEY|'${NEW_RELIC_MOBILE_KEY}'|' app/src/main/java/technology/nrkk/apps/socks/LoginActivity.kt && \
+     cat app/newrelic.properties && \
      ./gradlew clean assembleRelease
 
 FROM appium/appium:v2.11.4-p2
