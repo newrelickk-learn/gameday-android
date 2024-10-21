@@ -28,11 +28,22 @@ docker-build:
         tag="$CI_COMMIT_REF_SLUG"
         echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
       fi
-    - docker build . --network host --tag public.ecr.aws/g7c8o4c7/appium:latest --build-arg NEW_RELIC_MOBILE_KEY=${NEW_RELIC_MOBILE_KEY}
-    - docker push public.ecr.aws/g7c8o4c7/appium:latest
-    - cd deployment
-    - docker build . --network host --tag public.ecr.aws/g7c8o4c7/awsssh:latest
-    - docker push public.ecr.aws/g7c8o4c7/awsssh:latest
+    - |
+      if [[ "$MAKE_APPIUM" == "true" ]]; then
+        docker build . --network host --tag public.ecr.aws/g7c8o4c7/appium:latest --build-arg NEW_RELIC_MOBILE_KEY=${NEW_RELIC_MOBILE_KEY}
+        docker push public.ecr.aws/g7c8o4c7/appium:latest
+      fi
+    - |
+      if [[ "$MAKE_SSH" == "true" ]]; then
+        if [[ "$SSH_CONTAINER_VERSION" == "" ]]; then
+          tag="latest"
+        else
+          tag="$SSH_CONTAINER_VERSION"
+        fi
+        cd deployment
+        docker build . --network host --tag public.ecr.aws/g7c8o4c7/awsssh:$tag
+        docker push public.ecr.aws/g7c8o4c7/awsssh:$tag
+      fi
 
   # Run this job in a branch where a Dockerfile exists
   only:
