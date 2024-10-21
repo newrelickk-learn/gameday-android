@@ -1,0 +1,9 @@
+Host YOUR_HOST # You can use any name
+    HostName YOUR_HOST
+    IdentityFile /root/.ssh/cert.pem
+    User shell
+    ForwardAgent yes
+    TCPKeepAlive yes
+    ConnectTimeout 5
+    ServerAliveCountMax 10
+    ServerAliveInterval 15
