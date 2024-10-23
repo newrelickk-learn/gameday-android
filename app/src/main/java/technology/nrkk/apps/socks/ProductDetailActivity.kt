@@ -32,6 +32,10 @@ class ProductDetailActivity : AppCompatActivity() {
             runOnUiThread {
                 binding.textName.text = product.name
                 ("%.0f円".format(product.price)).also { binding.textPrice.text = it }
+                binding.textCount.text = product.count.toString()
+            }
+            if (product.imageUrl?.size!! >= 2 &&  product.imageUrl[1].equals(null)) {
+                throw Exception("No thumbnail image provided")
             }
             APIUtils.getImageStream(this, product.imageUrl0, fun (inputStream: InputStream?) {
                 Handler(Looper.getMainLooper()).post(Runnable {
