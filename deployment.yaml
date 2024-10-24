@@ -23,3 +23,15 @@ spec:
           env:
             - name: REMOTE_ADB
               value: "true"
+          livenessProbe:
+            exec:
+              command:
+                - /home/androidusr/health.sh
+            initialDelaySeconds: 60
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command:
+                - /home/androidusr/health.sh
+            initialDelaySeconds: 60
+            periodSeconds: 60
