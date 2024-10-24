@@ -22,7 +22,7 @@ COPY --from=0 /build/app/build/outputs/apk/release/app-release.apk /app/app.apk
 
 COPY ./scripts/health.sh /home/androidusr/health.sh
 USER root
-RUN chown 1300:1301 /home/androidusr/health.sh
+RUN chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/health.sh
 
 USER 1300:1301
 CMD adb connect ssh:5555 && ./${SCRIPT_PATH}/start.sh
