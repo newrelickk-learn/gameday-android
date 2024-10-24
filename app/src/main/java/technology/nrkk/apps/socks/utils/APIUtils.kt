@@ -109,7 +109,8 @@ object APIUtils {
         val request = getRequest(context, "/catalogue/items?tags=%s".format(tags))
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -129,7 +130,8 @@ object APIUtils {
         val request = getRequest(context, "/catalogue/item/%s".format(id))
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -155,6 +157,8 @@ object APIUtils {
             .build()
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -171,7 +175,8 @@ object APIUtils {
         val request = getRequest(context, "/cart")
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -192,7 +197,8 @@ object APIUtils {
         val request = postRequest(context, "/cart/add", body)
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -208,7 +214,8 @@ object APIUtils {
         val request = getRequest(context, "/order")
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -229,7 +236,8 @@ object APIUtils {
         val request = postRequest(context, "/order/confirm", json.toRequestBody())
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
@@ -250,7 +258,8 @@ object APIUtils {
         val request = postRequest(context, "/order/purchase", json.toRequestBody())
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                failed()
+                NewRelic.recordHandledException(e)
+                throw e
             }
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {

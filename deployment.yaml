@@ -26,12 +26,14 @@ spec:
           livenessProbe:
             exec:
               command:
+                - bash
                 - /home/androidusr/health.sh
             initialDelaySeconds: 60
             periodSeconds: 60
           readinessProbe:
             exec:
               command:
+                - bash
                 - /home/androidusr/health.sh
             initialDelaySeconds: 60
             periodSeconds: 60
