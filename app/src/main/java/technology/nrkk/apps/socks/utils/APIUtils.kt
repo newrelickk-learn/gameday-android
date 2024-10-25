@@ -79,7 +79,8 @@ object APIUtils {
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                     val user = mapper.readValue<User>(responseData)
-                    NewRelic.setAttribute("user", user.id.toString())
+                    NewRelic.setAttribute("user", "uid_" + user.id.toString())
+                    NewRelic.setAttribute("companyId", user.companyId.toString())
                     succeeded(user)
                 } else {
                     failed()
