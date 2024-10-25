@@ -20,7 +20,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         NewRelic.withApplicationToken(
-            "AA920d34e50bb4e62167e9a66d643505d48b479326-NRMA"
+            "NEW_RELIC_MOBILE_KEY"
         )
             .withCrashReportingEnabled(true)
             .start(this.applicationContext)
