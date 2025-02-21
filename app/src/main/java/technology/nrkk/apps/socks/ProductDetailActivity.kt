@@ -47,6 +47,7 @@ class ProductDetailActivity : AppCompatActivity() {
         }, fun (){})
         binding.btnAddToCart.setOnClickListener {
             NewRelic.recordBreadcrumb("ClickItemAdd")
+            NewRelic.logError("User add the product. id:$productId")
             APIUtils.addToCart(this, productId, 1, {
                 runOnUiThread {
                     NewRelic.recordBreadcrumb("ItemAdded")

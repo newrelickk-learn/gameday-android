@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.newrelic.agent.android.FeatureFlag
 import technology.nrkk.apps.socks.models.User
 import technology.nrkk.apps.socks.utils.APIUtils
 import com.newrelic.agent.android.NewRelic
@@ -23,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
             "NEW_RELIC_MOBILE_KEY"
         )
             .withCrashReportingEnabled(true)
+            .withLoggingEnabled(true)
             .start(this.applicationContext)
 
         setContentView(R.layout.activity_login)
@@ -35,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun succeeded (user: User) {
+        NewRelic.logInfo("${user.username} is logging in")
         runOnUiThread {
             Toast.makeText(this@LoginActivity, "Hello, %s".format(user.username), Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
@@ -43,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun failed () {
+        NewRelic.logError("Failed to log in")
         runOnUiThread {
             Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT).show()
         }
