@@ -34,20 +34,6 @@ spec:
           env:
             - name: REMOTE_ADB
               value: "true"
-          livenessProbe:
-            exec:
-              command:
-                - bash
-                - /home/androidusr/health.sh
-            initialDelaySeconds: 60
-            periodSeconds: 60
-          readinessProbe:
-            exec:
-              command:
-                - bash
-                - /home/androidusr/health.sh
-            initialDelaySeconds: 60
-            periodSeconds: 60
         - name: ssh
           image: public.ecr.aws/g7c8o4c7/awsssh:0.0.4
           env:
