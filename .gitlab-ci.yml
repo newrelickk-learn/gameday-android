@@ -92,6 +92,9 @@ deploy:
         echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
       fi
     - sed -i "s/appium:latest/appium:${tag}/g" deployment.yaml
+    - sed -i "s/YOUR_AWS_ACCESS_KEY_ID/${APPIUM_AWS_ACCESS_KEY_ID}/g" deployment.yaml
+    - sed -i "s/YOUR_AWS_SECRET_ACCESS_KEY/${APPIUM_AWS_SECRET_ACCESS_KEY}/g" deployment.yaml
+    -
     - mkdir -p ~/.kube; cat ${KUBE_CONFIG} > /root/.kube/config
     - kubectl apply -f deployment.yaml
   only:

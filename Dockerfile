@@ -25,5 +25,5 @@ USER root
 RUN chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/health.sh
 
 USER 1300:1301
-CMD adb connect ssh:5555 && ./${SCRIPT_PATH}/start.sh
+CMD adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
 
