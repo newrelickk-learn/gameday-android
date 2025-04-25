@@ -1,15 +1,12 @@
 package technology.nrkk.apps.socks
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,7 +14,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.listviewsample.ProductListAdapter
 import com.newrelic.agent.android.NewRelic
 import technology.nrkk.apps.socks.models.Product
-import technology.nrkk.apps.socks.models.User
 import technology.nrkk.apps.socks.utils.APIUtils
 
 class MainActivity : AppCompatActivity() {

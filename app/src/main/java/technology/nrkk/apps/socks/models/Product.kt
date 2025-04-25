@@ -6,3 +6,5 @@ data class Product(val id: String, val name: String?, val description: String?, 
     val imageUrl0: String
         get() = if (imageUrl !== null && imageUrl.size > 0) imageUrl[0] else ""
 }
+
+class ProductList: ArrayList<Product>()

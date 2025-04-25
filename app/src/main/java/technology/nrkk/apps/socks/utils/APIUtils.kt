@@ -2,16 +2,15 @@ package technology.nrkk.apps.socks.utils
 
 import android.content.Context
 import android.os.Build
-import android.renderscript.ScriptGroup.Input
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
-import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.newrelic.agent.android.NewRelic
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.FormBody
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -20,11 +19,11 @@ import okhttp3.Response
 import technology.nrkk.apps.socks.models.Cart
 import technology.nrkk.apps.socks.models.Order
 import technology.nrkk.apps.socks.models.Product
+import technology.nrkk.apps.socks.models.ProductList
 import technology.nrkk.apps.socks.models.User
 import java.io.IOException
 import java.io.InputStream
 import java.util.Base64
-
 
 object APIUtils {
 
@@ -61,7 +60,7 @@ object APIUtils {
             .header("Content-type", "application/json")
             .header("Authorization", "Basic %s".format(token))
             .url("%s%s".format(URL_BASE, "/api/user"))
-            .post("".toRequestBody()).build()
+            .post("".toRequestBody("application/json; charset=utf-8".toMediaType())).build()
          /*
         val request = Request.Builder()
             .header("Content-type", "application/json")
@@ -76,9 +75,10 @@ object APIUtils {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val responseData = response.body?.string().orEmpty()
+                    NewRelic.logInfo(responseData)
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val user = mapper.readValue<User>(responseData)
+                    val user = mapper.readValue(responseData, User::class.java)
                     NewRelic.setUserId("uid_" + user.id.toString())
                     NewRelic.setAttribute("user", "uid_" + user.id.toString())
                     NewRelic.setAttribute("companyId", user.companyId.toString())
@@ -99,7 +99,7 @@ object APIUtils {
                 if (response.isSuccessful) {
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val user = mapper.readValue<User>(response.body?.string().orEmpty())
+                    val user = mapper.readValue(response.body?.string().orEmpty(), User::class.java)
                     succeeded(user)
                 } else {
                     failed()
@@ -119,7 +119,7 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val products = mapper.readValue<List<Product>>(responseData)
+                    val products = mapper.readValue(responseData, ProductList::class.java)
                     succeeded(products)
                 } else {
                     failed()

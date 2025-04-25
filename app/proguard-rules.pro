@@ -20,5 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.newrelic.** { *; }
+-keep class technology.nrkk.apps.socks.models.** { *; }
 -dontwarn com.newrelic.**
 -keepattributes Exceptions, Signature, InnerClasses, LineNumberTable
