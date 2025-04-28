@@ -25,12 +25,15 @@ spec:
       labels:
         app: appium
     spec:
-      initContainers:
-        - name: pem
-          image: public.ecr.aws/g7c8o4c7/appium-init:latest
-          # Give `grafana` user (id 472) permissions a mounted volume
-          # https://github.com/grafana/grafana-docker/blob/master/Dockerfile
+      containers:
+        - name: appium
+          image: public.ecr.aws/g7c8o4c7/appium:latest
+          ports:
+            - name: appium
+              containerPort: 4723
           env:
+            - name: REMOTE_ADB
+              value: "true"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -45,17 +48,8 @@ spec:
               value: "ap-northeast-1"
           volumeMounts:
             - name: genymotion-pem
-              mountPath: /root/ssh
+              mountPath: /home/androidusr/.ssh
               readOnly: true
-      containers:
-        - name: appium
-          image: public.ecr.aws/g7c8o4c7/appium:latest
-          ports:
-            - name: appium
-              containerPort: 4723
-          env:
-            - name: REMOTE_ADB
-              value: "true"
       volumes:
         - name: genymotion-pem
           secret:
