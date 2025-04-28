@@ -5,4 +5,5 @@ COPY ./scripts/init.sh /root/init.sh
 RUN yum -y update && yum -y install openssh-clients && chmod +x /root/*.sh
 
 ENV GENY_IP_TARGET=PrivateIpAddress
+ENTRYPOINT /root/init.sh
 
