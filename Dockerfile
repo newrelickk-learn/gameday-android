@@ -24,7 +24,7 @@ COPY ./scripts/health.sh /home/androidusr/health.sh
 COPY ./deployment/ssh/androidusr_config /home/androidusr/.ssh/config
 COPY ./deployment/scripts/androidusr_init.sh /home/androidusr/init.sh
 USER root
-RUN apt-get update && apt-get install -y ssh openssh-client && chmod +x /root/*.sh
+RUN apt-get update && apt-get install -y ssh openssh-client && chmod +x /home/androidusr/*.sh
 RUN chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/health.sh
 
 ENV GENY_IP_TARGET=PrivateIpAddress
