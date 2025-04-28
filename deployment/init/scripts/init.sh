@@ -9,4 +9,6 @@ curl --insecure -X POST -u genymotion:$GENY_PASS https://$GENY_HOST/api/v1/confi
     -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"active": true,"active_on_reboot": true}'
 sed -i 's|YOUR_HOST|'${GENY_IP}'|g' /root/.ssh/config
 cat /root/.ssh/config
+mkdir -p /home/androidusr/.ssh
+cp -L /root/.ssh/config /home/androidusr/.ssh/config
 cp -L /root/ssh/*.pem /home/androidusr/.ssh/cert.pem && chmod -R 600 /home/androidusr/.ssh/*
