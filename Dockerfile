@@ -21,9 +21,8 @@ FROM appium/appium:v2.11.4-p2
 COPY --from=0 /build/app/build/outputs/apk/release/app-release.apk /app/app.apk
 
 COPY ./scripts/health.sh /home/androidusr/health.sh
-COPY ./deployment/ssh/config /root/.ssh/config
-COPY ./deployment/scripts/init.sh /root/init.sh
-COPY ./deployment/scripts/health.sh /root/health.sh
+COPY ./deployment/ssh/androidusr_config /home/androidusr/.ssh/config
+COPY ./deployment/scripts/androidusr_init.sh /home/androidusr/init.sh
 USER root
 RUN apt-get update && apt-get install -y ssh openssh-client && chmod +x /root/*.sh
 RUN chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/health.sh
@@ -31,5 +30,5 @@ RUN chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/heal
 ENV GENY_IP_TARGET=PrivateIpAddress
 
 USER 1300:1301
-CMD /root/init.sh; adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
+CMD /home/androidusr/init.sh; adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
 
