@@ -30,5 +30,5 @@ RUN chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/heal
 ENV GENY_IP_TARGET=PrivateIpAddress
 
 USER 1300:1301
-CMD /home/androidusr/init.sh; adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
+CMD ssh $SSH_DEBUG -o StrictHostKeyChecking=no -N $GENY_IP -L *:5555:localhost:5555 & adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
 
