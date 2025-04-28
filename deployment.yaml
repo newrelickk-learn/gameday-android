@@ -43,8 +43,6 @@ spec:
                   name: appium-secrets
             - name: AWS_REGION
               value: "ap-northeast-1"
-          command:
-            - /root/init.sh
           volumeMounts:
             - name: genymotion-pem
               mountPath: /home/androidusr/ssh
