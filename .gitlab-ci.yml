@@ -74,7 +74,6 @@ docker-build-for-tag:
     - cd ./deployment/init
     - docker build . --network host --tag public.ecr.aws/g7c8o4c7/appium-init:${tag} --build-arg NEW_RELIC_MOBILE_KEY=${NEW_RELIC_MOBILE_KEY}
     - docker push public.ecr.aws/g7c8o4c7/appium-init:${tag}
-    -
   only:
     - tags
   except:
