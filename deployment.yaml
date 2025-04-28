@@ -45,7 +45,7 @@ spec:
               value: "ap-northeast-1"
           volumeMounts:
             - name: genymotion-pem
-              mountPath: /home/androidusr/ssh
+              mountPath: /root/ssh
               readOnly: true
       containers:
         - name: appium
