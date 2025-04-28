@@ -10,4 +10,4 @@ curl --insecure -X POST -u genymotion:$GENY_PASS https://$GENY_HOST/api/v1/confi
 sed -i 's|YOUR_HOST|'${GENY_IP}'|g' /root/.ssh/config
 cat /root/.ssh/config
 cp -L /root/ssh/*.pem /root/.ssh/cert.pem && chmod -R 600 /root/.ssh/*
-ssh $SSH_DEBUG -o StrictHostKeyChecking=no -N $GENY_IP -L *:5555:localhost:5555
+ssh $SSH_DEBUG -o StrictHostKeyChecking=no -N $GENY_IP -L *:5555:localhost:5555 &

@@ -34,9 +34,6 @@ spec:
           env:
             - name: REMOTE_ADB
               value: "true"
-        - name: ssh
-          image: public.ecr.aws/g7c8o4c7/awsssh:0.0.4
-          env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -53,9 +50,6 @@ spec:
             - name: genymotion-pem
               mountPath: /root/ssh
               readOnly: true
-          ports:
-            - name: http
-              containerPort: 5555
           resources:
             limits:
               memory: 512Mi
