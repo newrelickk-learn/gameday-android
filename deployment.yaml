@@ -46,6 +46,12 @@ spec:
                   name: appium-secrets
             - name: AWS_REGION
               value: "ap-northeast-1"
+          livenessProbe:
+            exec:
+              command:
+                - /home/androidusr/health.sh
+            initialDelaySeconds: 20
+            periodSeconds: 300
           volumeMounts:
             - name: genymotion-pem
               mountPath: /home/androidusr/.ssh/cert.pem

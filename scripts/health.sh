@@ -1,5 +1,5 @@
 #/bin/bash
-if [ 1 -eq "$(adb devices | grep ssh | wc -l)" ];
+if [ 1 -eq "$(adb devices | grep 5555 | wc -l)" ];
 then
   echo "working"
   exit 0;
