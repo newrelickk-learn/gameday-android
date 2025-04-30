@@ -70,6 +70,8 @@ object APIUtils {
           */
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                Log.e("Logging in", "Failed")
+                NewRelic.setAttribute("error.group.name", "Login Failed")
                 failed()
             }
             override fun onResponse(call: Call, response: Response) {
@@ -84,6 +86,7 @@ object APIUtils {
                     NewRelic.setAttribute("companyId", user.companyId.toString())
                     succeeded(user)
                 } else {
+                    NewRelic.setAttribute("error.group.name", "Login Failed")
                     failed()
                 }
             }
@@ -140,7 +143,7 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val products = mapper.readValue<Product>(responseData)
+                    val products = mapper.readValue(responseData, Product::class.java)
                     succeeded(products)
                 } else {
                     failed()
@@ -185,7 +188,7 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val cart = mapper.readValue<Cart>(responseData)
+                    val cart = mapper.readValue(responseData, Cart::class.java)
                     succeeded(cart)
                 } else {
                     failed()
@@ -224,7 +227,7 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val order = mapper.readValue<Order>(responseData)
+                    val order = mapper.readValue(responseData, Order::class.java)
                     succeeded(order)
                 } else {
                     failed()
@@ -246,7 +249,7 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val order = mapper.readValue<Order>(responseData)
+                    val order = mapper.readValue(responseData, Order::class.java)
                     succeeded(order)
                 } else {
                     failed()
@@ -268,7 +271,7 @@ object APIUtils {
                     val responseData = response.body?.string().orEmpty()
                     val mapper = jacksonObjectMapper()
                     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                    val order = mapper.readValue<Order>(responseData)
+                    val order = mapper.readValue(responseData, Order::class.java)
                     succeeded(order)
                 } else {
                     failed()

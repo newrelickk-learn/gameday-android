@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -34,7 +35,8 @@ class ProductDetailActivity : AppCompatActivity() {
                 ("%.0f円".format(product.price)).also { binding.textPrice.text = it }
                 binding.textCount.text = product.count.toString()
             }
-            if (product.imageUrl?.size!! >= 2 &&  product.imageUrl[1].equals(null)) {
+            if (product.imageUrl !== null && product.imageUrl.size <= 2) {
+                NewRelic.setAttribute("error.group.name", "No thumbnail image provided")
                 throw Exception("No thumbnail image provided")
             }
             APIUtils.getImageStream(this, product.imageUrl0, fun (inputStream: InputStream?) {
