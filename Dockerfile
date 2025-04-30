@@ -30,5 +30,5 @@ RUN chown 1300:1301 /home/androidusr/health.sh && chown 1300:1301 /home/androidu
 ENV GENY_IP_TARGET=PrivateIpAddress
 
 USER 1300:1301
-CMD /home/androidusr/init.sh adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
+CMD /home/androidusr/init.sh && adb connect localhost:5555 && ./${SCRIPT_PATH}/start.sh
 
