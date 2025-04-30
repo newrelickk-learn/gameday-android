@@ -21,12 +21,12 @@ FROM appium/appium:v2.11.4-p2
 COPY --from=0 /build/app/build/outputs/apk/release/app-release.apk /app/app.apk
 
 COPY ./scripts/health.sh /home/androidusr/health.sh
-COPY ./deployment/ssh/androidusr_config /home/androidusr/.ssh/config
 COPY ./deployment/scripts/androidusr_init.sh /home/androidusr/init.sh
 USER root
-RUN apt-get update && apt-get install -y ssh openssh-client less && chmod +x /home/androidusr/*.sh && chmod +x /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/.ssh/config
+RUN apt-get update && apt-get install -y ssh openssh-client less && chmod +x /home/androidusr/*.sh && chmod +x /home/androidusr/health.sh
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
-
+COPY ./deployment/ssh/androidusr_config /home/androidusr/.ssh/config
+RUN chown 1300:1301 /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/.ssh/config
 ENV GENY_IP_TARGET=PrivateIpAddress
 
 USER 1300:1301
