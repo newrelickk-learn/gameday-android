@@ -48,7 +48,8 @@ spec:
               value: "ap-northeast-1"
           volumeMounts:
             - name: genymotion-pem
-              mountPath: /home/androidusr/.ssh
+              mountPath: /home/androidusr/.ssh/cert.pem
+              subPath: cert.pem
               readOnly: true
       volumes:
         - name: genymotion-pem
