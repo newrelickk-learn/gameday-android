@@ -26,7 +26,7 @@ USER root
 RUN apt-get update && apt-get install -y ssh openssh-client less && chmod +x /home/androidusr/*.sh && chmod +x /home/androidusr/health.sh
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
 COPY ./deployment/ssh/androidusr_config /home/androidusr/ssh/config
-RUN chown 1300:1301 /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/ssh/config
+RUN chown 1300:1301 /home/androidusr/health.sh && chown 1300:1301 /home/androidusr/ssh/config && chown -R 1300:1300 /home/androidusr/.ssh
 ENV GENY_IP_TARGET=PrivateIpAddress
 
 USER 1300:1301
