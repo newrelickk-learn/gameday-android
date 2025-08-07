@@ -89,17 +89,6 @@ jobs:
           RELEASE_TAG=${{ github.ref_name }}
         network: host
 
-    - name: Build and push Appium Init Docker image
-      if: github.ref_type == 'tag'
-      uses: docker/build-push-action@v5
-      with:
-        context: ./deployment/init
-        push: true
-        tags: ${{ env.ECR_REGISTRY }}/${{ env.APPIUM_INIT_IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
-        build-args: |
-          NEW_RELIC_MOBILE_KEY=${{ secrets.NEW_RELIC_MOBILE_KEY }}
-        network: host
-
     - name: Build and push SSH Docker image
       if: github.event.inputs.make_ssh == 'true'
       uses: docker/build-push-action@v5
@@ -145,7 +134,6 @@ jobs:
         run: |
           tag="${{ needs.build.outputs.image-tag }}"
           sed -i "s/appium:latest/appium:${tag}/g" deployment.yaml
-          sed -i "s/appium-init:latest/appium-init:${tag}/g" deployment.yaml
           sed -i "s|YOUR_AWS_ACCESS_KEY_ID|${{ secrets.AWS_ACCESS_KEY_ID }}|g" deployment.yaml
-          sed -i "s|YOUR_AWS_SECRET_ACCESS_KEY|${{ secrets.AWS_ACCESS_KEY_ID }}|g" deployment.yaml
+          sed -i "s|YOUR_AWS_SECRET_ACCESS_KEY|${{ secrets.AWS_SECRET_ACCESS_KEY }}|g" deployment.yaml
           kubectl apply -f deployment.yaml
