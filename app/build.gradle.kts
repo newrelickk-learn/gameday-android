@@ -69,6 +69,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
 
-    implementation("com.newrelic.agent.android:android-agent:7.6.0")
+    implementation("com.newrelic.agent.android:android-agent:7.6.8")
 
 }

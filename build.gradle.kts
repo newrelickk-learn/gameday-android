@@ -9,6 +9,6 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.newrelic.agent.android:agent-gradle-plugin:7.6.0")
+        classpath("com.newrelic.agent.android:agent-gradle-plugin:7.6.8")
     }
 }
