@@ -1,0 +1,151 @@
+name: Production Deploy
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      make_appium:
+        description: 'Build and push Appium container'
+        type: boolean
+        default: true
+      make_ssh:
+        description: 'Build and push SSH container'
+        type: boolean
+        default: false
+      ssh_container_version:
+        description: 'SSH container version tag'
+        type: string
+        default: 'latest'
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: public.ecr.aws/g7c8o4c7
+  APPIUM_IMAGE_NAME: appium
+  APPIUM_INIT_IMAGE_NAME: appium-init
+  SSH_IMAGE_NAME: awsssh
+
+jobs:
+  build:
+    runs-on: ${{ vars.RUNNER_LABELS || 'ubuntu-latest' }}
+    outputs:
+      image-tag: ${{ steps.tag.outputs.tag }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install AWS CLI
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver: kubernetes
+        driver-opts: |
+          namespace=github-new
+          replicas=1
+          "rootless=true"
+        platforms: linux/amd64
+
+    - name: Login to Amazon ECR Public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
+
+    - name: Set image tag
+      id: tag
+      run: |
+        if [[ "${{ github.ref_type }}" == "tag" ]]; then
+          tag=$(echo ${{ github.ref_name }} | sed "s/\./-/g")
+        else
+          tag="latest"
+        fi
+        echo "tag=${tag}" >> $GITHUB_OUTPUT
+
+    - name: Build and push Appium Docker image
+      if: github.ref_type == 'tag' || github.event.inputs.make_appium == 'true'
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.APPIUM_IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+        build-args: |
+          NEW_RELIC_MOBILE_KEY=${{ secrets.NEW_RELIC_MOBILE_KEY }}
+          COMMIT_SHA=${{ github.sha }}
+          RELEASE_TAG=${{ github.ref_name }}
+        network: host
+
+    - name: Build and push Appium Init Docker image
+      if: github.ref_type == 'tag'
+      uses: docker/build-push-action@v5
+      with:
+        context: ./deployment/init
+        push: true
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.APPIUM_INIT_IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
+        build-args: |
+          NEW_RELIC_MOBILE_KEY=${{ secrets.NEW_RELIC_MOBILE_KEY }}
+        network: host
+
+    - name: Build and push SSH Docker image
+      if: github.event.inputs.make_ssh == 'true'
+      uses: docker/build-push-action@v5
+      with:
+        context: ./deployment
+        push: true
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.SSH_IMAGE_NAME }}:${{ github.event.inputs.ssh_container_version || 'latest' }}
+        network: host
+
+  deploy:
+    needs: build
+    runs-on: ${{ vars.RUNNER_LABELS || 'ubuntu-latest' }}
+    if: github.ref_type == 'tag' && vars.ENABLE_DEPLOY == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name Socks --region ap-northeast-1
+
+      - name: Deploy to Kubernetes
+        run: |
+          tag="${{ needs.build.outputs.image-tag }}"
+          sed -i "s/appium:latest/appium:${tag}/g" deployment.yaml
+          sed -i "s/appium-init:latest/appium-init:${tag}/g" deployment.yaml
+          sed -i "s|YOUR_AWS_ACCESS_KEY_ID|${{ secrets.AWS_ACCESS_KEY_ID }}|g" deployment.yaml
+          sed -i "s|YOUR_AWS_SECRET_ACCESS_KEY|${{ secrets.AWS_ACCESS_KEY_ID }}|g" deployment.yaml
+          kubectl apply -f deployment.yaml

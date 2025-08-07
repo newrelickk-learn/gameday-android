@@ -1,0 +1,77 @@
+name: Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Type of build to perform'
+        type: choice
+        required: true
+        options:
+          - appium
+          - ssh
+          - both
+      image_tag:
+        description: 'Docker image tag (defaults to latest)'
+        type: string
+        default: 'latest'
+      push_to_ecr:
+        description: 'Push images to ECR'
+        type: boolean
+        default: true
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: public.ecr.aws/g7c8o4c7
+  APPIUM_IMAGE_NAME: appium
+  SSH_IMAGE_NAME: awsssh
+
+jobs:
+  build:
+    runs-on: ${{ vars.RUNNER_LABELS || 'ubuntu-latest' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      with:
+        driver: kubernetes
+        driver-opts: |
+          namespace=github-new
+          replicas=1
+          "rootless=true"
+        platforms: linux/amd64
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR Public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
+
+    - name: Build and push Appium Docker image
+      if: github.event.inputs.build_type == 'appium' || github.event.inputs.build_type == 'both'
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: ${{ github.event.inputs.push_to_ecr == 'true' }}
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.APPIUM_IMAGE_NAME }}:${{ github.event.inputs.image_tag }}
+        build-args: |
+          NEW_RELIC_MOBILE_KEY=${{ secrets.NEW_RELIC_MOBILE_KEY }}
+        network: host
+
+    - name: Build and push SSH Docker image
+      if: github.event.inputs.build_type == 'ssh' || github.event.inputs.build_type == 'both'
+      uses: docker/build-push-action@v5
+      with:
+        context: ./deployment
+        push: ${{ github.event.inputs.push_to_ecr == 'true' }}
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.SSH_IMAGE_NAME }}:${{ github.event.inputs.image_tag }}
+        network: host
